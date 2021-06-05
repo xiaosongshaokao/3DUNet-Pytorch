@@ -20,7 +20,7 @@ parser.add_argument('--slice_down_scale', type=float, default=1.0, help='')
 parser.add_argument('--valid_rate', type=float, default=0.2, help='')
 
 # data in/out and dataset
-parser.add_argument('--dataset_path',default = '/fixed_data',help='fixed trainset root path')
+parser.add_argument('--dataset_path',default = 'fixed_data',help='fixed trainset root path')
 parser.add_argument('--test_data_path',default = 'test',help='Testset path')
 parser.add_argument('--save',default='model',help='save path of trained model')
 parser.add_argument('--batch_size', type=list, default=2,help='batch size of trainset')
