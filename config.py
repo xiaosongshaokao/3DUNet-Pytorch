@@ -3,9 +3,9 @@ import argparse
 parser = argparse.ArgumentParser(description='Hyper-parameters management')
 
 # Hardware options
-parser.add_argument('--n_threads', type=int, default=6,help='number of threads for data loading')
+parser.add_argument('--n_threads', type=int, default=3,help='number of threads for data loading')
 parser.add_argument('--cpu', action='store_true',help='use cpu only')
-parser.add_argument('--gpu_id', type=list,default=[0,1], help='use cpu only')
+parser.add_argument('--gpu_id', type=list,default=[0], help='use cpu only')
 parser.add_argument('--seed', type=int, default=2021, help='random seed')
 
 # Preprocess parameters
@@ -20,9 +20,9 @@ parser.add_argument('--slice_down_scale', type=float, default=1.0, help='')
 parser.add_argument('--valid_rate', type=float, default=0.2, help='')
 
 # data in/out and dataset
-parser.add_argument('--dataset_path',default = '/ssd/lzq/dataset/fixed_lits',help='fixed trainset root path')
-parser.add_argument('--test_data_path',default = '/ssd/lzq/dataset/LiTS/test',help='Testset path')
-parser.add_argument('--save',default='ResUNet',help='save path of trained model')
+parser.add_argument('--dataset_path',default = '/fixed_data',help='fixed trainset root path')
+parser.add_argument('--test_data_path',default = 'test',help='Testset path')
+parser.add_argument('--save',default='model',help='save path of trained model')
 parser.add_argument('--batch_size', type=list, default=2,help='batch size of trainset')
 
 # train

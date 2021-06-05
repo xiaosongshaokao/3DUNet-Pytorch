@@ -30,11 +30,11 @@ class LITS_preprocess:
         for ct_file,i in zip(file_list,range(Numbers)):
             print("==== {} | {}/{} ====".format(ct_file, i+1,Numbers))
             ct_path = os.path.join(self.raw_root_path, 'ct', ct_file)
-            seg_path = os.path.join(self.raw_root_path, 'label', ct_file.replace('volume', 'segmentation'))
+            seg_path = os.path.join(self.raw_root_path, 'label', ct_file.replace('image', 'label'))
             new_ct, new_seg = self.process(ct_path, seg_path, classes = self.classes)
             if new_ct != None and new_seg != None:
                 sitk.WriteImage(new_ct, os.path.join(self.fixed_path, 'ct', ct_file))  
-                sitk.WriteImage(new_seg, os.path.join(self.fixed_path, 'label', ct_file.replace('volume', 'segmentation').replace('.nii', '.nii.gz')))
+                sitk.WriteImage(new_seg, os.path.join(self.fixed_path, 'label', ct_file.replace('image', 'label').replace('.nii', '.nii.gz')))
 
     def process(self, ct_path, seg_path, classes=None):
         ct = sitk.ReadImage(ct_path, sitk.sitkInt16)
@@ -108,13 +108,13 @@ class LITS_preprocess:
         f = open(join(self.fixed_path, file_name), 'w')
         for name in name_list:
             ct_path = os.path.join(self.fixed_path, 'ct', name)
-            seg_path = os.path.join(self.fixed_path, 'label', name.replace('volume', 'segmentation'))
+            seg_path = os.path.join(self.fixed_path, 'label', name.replace('image', 'label'))
             f.write(ct_path + ' ' + seg_path + "\n")
         f.close()
 
 if __name__ == '__main__':
-    raw_dataset_path = '/ssd/lzq/dataset/LiTS/train'
-    fixed_dataset_path = '/ssd/lzq/dataset/fixed_lits'
+    raw_dataset_path = 'dataset\\train'
+    fixed_dataset_path = 'fixed_data'
 
     args = config.args 
     tool = LITS_preprocess(raw_dataset_path,fixed_dataset_path, args)
