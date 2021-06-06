@@ -10,7 +10,7 @@ import math
 import SimpleITK as sitk
 
 class Img_DataSet(Dataset):
-    def __init__(self, data_path, label_path, args):
+    def __init__(self, data_path, args):#, label_path
         self.n_labels = args.n_labels
         self.cut_size = args.test_cut_size
         self.cut_stride = args.test_cut_stride
@@ -30,12 +30,12 @@ class Img_DataSet(Dataset):
         # 对数据按步长进行分patch操作，以防止显存溢出
         self.data_np = self.extract_ordered_overlap(self.data_np, self.cut_size, self.cut_stride)
 
-        # 读取一个label文件 shape:[s,h,w]
-        self.seg = sitk.ReadImage(label_path,sitk.sitkInt8)
-        self.label_np = sitk.GetArrayFromImage(self.seg)
-        if self.n_labels==2:
-            self.label_np[self.label_np > 0] = 1
-        self.label = torch.from_numpy(np.expand_dims(self.label_np,axis=0)).long()
+        # # 读取一个label文件 shape:[s,h,w]
+        # self.seg = sitk.ReadImage(label_path,sitk.sitkInt8)
+        # self.label_np = sitk.GetArrayFromImage(self.seg)
+        # if self.n_labels==2:
+        #     self.label_np[self.label_np > 0] = 1
+        # self.label = torch.from_numpy(np.expand_dims(self.label_np,axis=0)).long()
 
         # 预测结果保存
         self.result = None
@@ -110,8 +110,8 @@ class Img_DataSet(Dataset):
 
 def Test_Datasets(dataset_path, args):
     data_list = sorted(glob(os.path.join(dataset_path, 'ct/*')))
-    label_list = sorted(glob(os.path.join(dataset_path, 'label/*')))
+    # label_list = sorted(glob(os.path.join(dataset_path, 'label/*')))
     print("The number of test samples is: ", len(data_list))
-    for datapath, labelpath in zip(data_list, label_list):
+    for datapath in data_list:#, label_list, labelpath
         print("\nStart Evaluate: ", datapath)
-        yield Img_DataSet(datapath, labelpath,args=args), datapath.split('-')[-1]
+        yield Img_DataSet(datapath,args=args), datapath.split('-')[-1]#, labelpathhhh
