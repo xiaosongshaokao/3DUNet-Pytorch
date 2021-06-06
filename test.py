@@ -15,9 +15,9 @@ from collections import OrderedDict
 def predict_one_img(model, img_dataset, args):
     dataloader = DataLoader(dataset=img_dataset, batch_size=1, num_workers=0, shuffle=False)
     model.eval()
-    test_dice = DiceAverage(args.n_labels)
-    target = to_one_hot_3d(img_dataset.label, args.n_labels)
-    
+    # test_dice = DiceAverage(args.n_labels)
+    # target = to_one_hot_3d(img_dataset.label, args.n_labels)
+    #
     with torch.no_grad():
         for data in tqdm(dataloader,total=len(dataloader)):
             data = data.to(device)
@@ -29,21 +29,21 @@ def predict_one_img(model, img_dataset, args):
     pred = torch.argmax(pred,dim=1)
 
     pred_img = common.to_one_hot_3d(pred,args.n_labels)
-    test_dice.update(pred_img, target)
-    
-    test_dice = OrderedDict({'Dice_liver': test_dice.avg[1]})
-    if args.n_labels==3: test_dice.update({'Dice_tumor': test_dice.avg[2]})
+    # test_dice.update(pred_img, target)
+    #
+    # test_dice = OrderedDict({'Dice_liver': test_dice.avg[1]})
+    # if args.n_labels==3: test_dice.update({'Dice_tumor': test_dice.avg[2]})
     
     pred = np.asarray(pred.numpy(),dtype='uint8')
     if args.postprocess:
         pass # TO DO
     pred = sitk.GetImageFromArray(np.squeeze(pred,axis=0))
 
-    return test_dice, pred
+    return pred# test_dice,
 
 if __name__ == '__main__':
     args = config.args
-    save_path = os.path.join('./experiments', args.save)
+    save_path = os.path.join('experiments', args.save)
     device = torch.device('cpu' if args.cpu else 'cuda')
     # model info
     model = ResUNet(in_channel=1, out_channel=args.n_labels,training=False).to(device)
@@ -59,6 +59,7 @@ if __name__ == '__main__':
     
     datasets = Test_Datasets(args.test_data_path,args=args)
     for img_dataset,file_idx in datasets:
-        test_dice,pred_img = predict_one_img(model, img_dataset, args)
-        test_log.update(file_idx, test_dice)
+        pred_img = predict_one_img(model, img_dataset, args)#test_dice,
+        # test_log.update(file_idx, test_dice)
         sitk.WriteImage(pred_img, os.path.join(result_save_path, 'result-'+file_idx+'.gz'))
+
