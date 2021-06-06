@@ -94,7 +94,7 @@ class Img_DataSet(Dataset):
         return tmp_full_imgs
     
     # Divide all the full_imgs in pacthes
-    def extract_ordered_overlap(self, img, size, stride):
+    def extract_ordered_overlap(self, img, size, stride):#
         img_s, img_h, img_w = img.shape
         assert (img_s - size) % stride == 0
         N_patches_img = (img_s - size) // stride + 1
